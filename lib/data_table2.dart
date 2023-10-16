@@ -1,5 +1,7 @@
 import 'package:data_table_2/data_table_2.dart';
+
 import 'package:demo_ville/data_source.dart';
+import 'package:demo_ville/view/alertdailog.dart';
 import 'package:flutter/material.dart';
 
 import '../nav_helper.dart';
@@ -243,11 +245,13 @@ class DataTable2DemoState extends State<DataTable2Demo> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // Handle the onPressed action when the button is tapped.
-        },
-        child: Icon(Icons.add), // You can change the icon as needed.
-        backgroundColor:
-            Colors.redAccent, // Change the background color as needed.
+          addReceiptDialog(context);
+        }, // You can change the icon as needed.
+        backgroundColor: Colors.black,
+        child: const Icon(
+          Icons.add,
+          color: Colors.white,
+        ), // Change the background color as needed.
       ),
     );
   }
