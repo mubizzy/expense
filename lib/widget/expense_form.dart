@@ -4,28 +4,15 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:permission_handler/permission_handler.dart';
-
-class ExpenseApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Expense Widget'),
-        ),
-        body: ExpenseForm(),
-      ),
-    );
-  }
-}
 
 class ExpenseForm extends StatefulWidget {
+  const ExpenseForm({super.key});
+
   @override
-  _ExpenseFormState createState() => _ExpenseFormState();
+  ExpenseFormState createState() => ExpenseFormState();
 }
 
-class _ExpenseFormState extends State<ExpenseForm> {
+class ExpenseFormState extends State<ExpenseForm> {
   final merchantController = TextEditingController();
   String selectedExpenseType = 'Ride-Sharing';
   final expenseTypes = ['Ride-Sharing', 'Restaurant', 'Breakfast', 'Fast Food'];
@@ -66,127 +53,119 @@ class _ExpenseFormState extends State<ExpenseForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
+    return Padding(
+      padding: const EdgeInsets.all(4.0),
+      child: Column(
+        children: [
+          const Text("Add Expense",
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          ),
+          TextField(
+            controller: merchantController,
+            readOnly: true,
+            decoration: InputDecoration(
+              hintText: 'Merchant',
+              suffixIcon: PopupMenuButton<String>(
+                icon: const Icon(Icons.arrow_drop_down),
+                onSelected: (String newValue) {
+                  setState(() {
+                    selectedExpenseType = newValue;
+                    merchantController.text = selectedExpenseType;
+                  });
+                },
+                itemBuilder: (BuildContext context) {
+                  return expenseTypes.map((String expenseType) {
+                    return PopupMenuItem<String>(
+                      value: expenseType,
+                      child: Text(expenseType),
+                    );
+                  }).toList();
+                },
+              ),
+            ),
+          ),
+          TextField(
+            controller: totalController,
+            decoration: const InputDecoration(labelText: 'Total'),
+          ),
+          const SizedBox(
+            height: 20,
+          ),
+          Row(
             children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text("Merchant"),
-                  TextField(
-                    controller: merchantController,
-                    decoration: InputDecoration(
-                      hintText: 'Merchant',
-                      suffixIcon: PopupMenuButton<String>(
-                        icon: const Icon(Icons.arrow_drop_down),
-                        onSelected: (String newValue) {
-                          setState(() {
-                            selectedExpenseType = newValue;
-                            merchantController.text = selectedExpenseType;
-                          });
-                        },
-                        itemBuilder: (BuildContext context) {
-                          return expenseTypes.map((String expenseType) {
-                            return PopupMenuItem<String>(
-                              value: expenseType,
-                              child: Text(expenseType),
-                            );
-                          }).toList();
-                        },
-                      ),
+              Expanded(
+                child: TextField(
+                  enabled: true,
+                  readOnly: true,
+                  controller: TextEditingController(text: formattedDate()),
+                  decoration: InputDecoration(
+                    labelText: 'Date',
+                    suffixIcon: IconButton(
+                      onPressed: () {
+                        _selectDate(context);
+                      },
+                      icon: const Icon(Icons.calendar_today),
                     ),
                   ),
-                ],
+                ),
               ),
-              TextField(
-                controller: totalController,
-                decoration: const InputDecoration(labelText: 'Total'),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      enabled: true,
-                      controller: TextEditingController(text: formattedDate()),
-                      decoration: InputDecoration(
-                        labelText: 'Date',
-                        suffixIcon: IconButton(
-                          onPressed: () {
-                            _selectDate(context);
-                          },
-                          icon: const Icon(Icons.calendar_today),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
+            ],
+          ),
+          const SizedBox(
+            height: 6,
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Comment',
+                style: TextStyle(fontSize: 14, ),
               ),
               const SizedBox(
                 height: 6,
               ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'Comment',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(
-                    height: 6,
-                  ),
-                  TextField(
-                    controller: commentController,
-                    maxLines: 5,
-                    decoration: const InputDecoration(
-                      hintText: 'Enter your comment here',
-                      border: OutlineInputBorder(),
-                    ),
-                  ),
-                ],
-              ),
-              ElevatedButton(
-                onPressed: _pickImage,
-                child: const Text('Select Receipt'),
-              ),
-              if (receiptImage != null)
-                Column(
-                  children: [
-                    const SizedBox(height: 10),
-                    const Text(
-                      'Selected Receipt:',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    Image.file(File(receiptImage!.path)),
-                  ],
+              TextField(
+                controller: commentController,
+                maxLines: 5,
+                decoration: const InputDecoration(
+                  hintText: 'Enter your comment here',
+                  border: OutlineInputBorder(),
                 ),
-              ElevatedButton(
-                onPressed: () {
-                  final merchant = merchantController.text;
-                  final total = totalController.text;
-                  final comment = commentController.text;
-                  // You can now use the 'merchant', 'selectedExpenseType', and 'total' values as needed.
-                  // The 'formattedDate()' function provides the formatted date.
-                  if (kDebugMode) {
-                    print('Merchant: $merchant');
-                    print('Expense Type: $selectedExpenseType');
-                    print('Total: $total');
-                    print('Date: ${formattedDate()}');
-                    print('Comment: $comment');
-                    print(
-                        'Receipt Image Path: ${receiptImage?.path ?? "No Image Selected"}');
-                  }
-                },
-                child: const Text('Submit Expense'),
               ),
             ],
           ),
-        ),
+             const SizedBox(height: 10),
+          ElevatedButton(
+            onPressed: _pickImage,
+            child: const Text('Select Receipt'),
+          ),
+          if (receiptImage != null)
+            Column(
+              children: [
+                const SizedBox(height: 10),
+                Image.file(File(receiptImage!.path)),
+              ],
+            ),
+        /*  ElevatedButton(
+            onPressed: () {
+              final merchant = merchantController.text;
+              final total = totalController.text;
+              final comment = commentController.text;
+              // You can now use the 'merchant', 'selectedExpenseType', and 'total' values as needed.
+              // The 'formattedDate()' function provides the formatted date.
+              if (kDebugMode) {
+                print('Merchant: $merchant');
+                print('Expense Type: $selectedExpenseType');
+                print('Total: $total');
+                print('Date: ${formattedDate()}');
+                print('Comment: $comment');
+                print(
+                    'Receipt Image Path: ${receiptImage?.path ?? "No Image Selected"}');
+              }
+            },
+            child: const Text('Submit Expense'),
+         ), */
+        ],
       ),
     );
   }

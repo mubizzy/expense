@@ -1,3 +1,5 @@
+import 'package:demo_ville/view/customTextButton.dart';
+import 'package:demo_ville/widget/expense_form.dart';
 import 'package:flutter/material.dart';
 
 void addReceiptDialog(BuildContext context) {
@@ -5,64 +7,13 @@ void addReceiptDialog(BuildContext context) {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
+          scrollable: true,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-          icon: const Icon(Icons.delete),
-//NOTE: Replace the content below to the class you create to handle this
-          content: const Text(
-            'Input your receipt for tracking',
-            style: TextStyle(
-              fontSize: 7,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
+          content:const ExpenseForm(),
           actions: [
-            TextButton(
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all<Color>(
-                    Colors.grey), // Background color
-                //foregroundColor: MaterialStateProperty.all<Color>(Colors.white), // Text color
-                padding: MaterialStateProperty.all<EdgeInsets>(
-                    EdgeInsets.all(16.0)), // Padding
-                shape: MaterialStateProperty.all<OutlinedBorder>(
-                  RoundedRectangleBorder(
-                      borderRadius:
-                          BorderRadius.circular(5.0)), // Border radius
-                ),
-              ),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text(
-                'Keep IT',
-                style: TextStyle(
-                  fontSize: 7,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-            const SizedBox(height: 10),
-            TextButton(
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all<Color>(
-                    Colors.black), // Background color
-                //foregroundColor: MaterialStateProperty.all<Color>(Colors.white), // Text color
-                padding: MaterialStateProperty.all<EdgeInsets>(
-                    EdgeInsets.all(16.0)), // Padding
-                shape: MaterialStateProperty.all<OutlinedBorder>(
-                  RoundedRectangleBorder(
-                      borderRadius:
-                          BorderRadius.circular(5.0)), // Border radius
-                ),
-              ),
-              onPressed: () {},
-              child: const Text(
-                'Yes, Delete',
-                style: TextStyle(
-                  fontSize: 7,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
+           customButton('Save', () { Navigator.pop(context);}),
+          customButton('Keep It', () { Navigator.pop(context);}),
+          customButton('Yes Delete', () { Navigator.pop(context);})
           ],
         );
       });
@@ -84,53 +35,10 @@ void filterDialog(BuildContext context) {
             ),
           ),
           actions: [
-            TextButton(
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all<Color>(
-                    Colors.grey), // Background color
-                //foregroundColor: MaterialStateProperty.all<Color>(Colors.white), // Text color
-                padding: MaterialStateProperty.all<EdgeInsets>(
-                    EdgeInsets.all(16.0)), // Padding
-                shape: MaterialStateProperty.all<OutlinedBorder>(
-                  RoundedRectangleBorder(
-                      borderRadius:
-                          BorderRadius.circular(5.0)), // Border radius
-                ),
-              ),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text(
-                'Keep IT',
-                style: TextStyle(
-                  fontSize: 7,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-            const SizedBox(height: 10),
-            TextButton(
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all<Color>(
-                    Colors.black), // Background color
-                //foregroundColor: MaterialStateProperty.all<Color>(Colors.white), // Text color
-                padding: MaterialStateProperty.all<EdgeInsets>(
-                    EdgeInsets.all(16.0)), // Padding
-                shape: MaterialStateProperty.all<OutlinedBorder>(
-                  RoundedRectangleBorder(
-                      borderRadius:
-                          BorderRadius.circular(5.0)), // Border radius
-                ),
-              ),
-              onPressed: () {},
-              child: const Text(
-                'Yes, Delete',
-                style: TextStyle(
-                  fontSize: 7,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
+          customButton('Save', () { Navigator.pop(context);}),
+          customButton('Keep It', () { Navigator.pop(context);}),
+          customButton('Yes Delete', () { Navigator.pop(context);})
+
           ],
         );
       });
